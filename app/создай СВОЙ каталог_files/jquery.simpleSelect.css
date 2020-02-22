@@ -1,0 +1,33 @@
+.simpleSelect {
+	cursor: pointer;
+	position: relative;
+	height: 100%;
+}
+.simpleSelect-current1 {
+	border-color: #dddddd; border-width: 1px; border-style: solid;
+	padding: 0px;
+	background: #eeeeee url('arrow.png') no-repeat 100% 50%;
+	
+}
+.simpleSelect-list {
+	border-color: #dddddd; border-width: 1px; border-style: solid;
+	margin-top: 2px;
+	background-color: #eeeeee;
+	width: 100px;
+	text-align: left;
+	position: absolute; z-index: 100;
+}
+.simpleSelect-list-option {
+	padding: 2px;
+}
+.simpleSelect-list-option-first {
+	background-color: #cccccc;
+	color: #777777 !important;
+	text-align: center;
+}
+.simpleSelect-list-option:hover {
+	background-color: #d3d3d3;
+}
+.simpleSelect-list-option-checked {
+	color: #438701;
+}

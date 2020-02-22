@@ -1,0 +1,20 @@
+#body-bottom-title-exit {
+	float: right;
+}
+#body-bottom-title-exit-button{
+	display: block;
+	color: #777777;
+	background: transparent;
+	text-decoration: none;	
+	font-size: 12px;
+	border-width: 0px; outline-width: 0px;
+	line-height: 25px;
+	padding: 0px 5px; margin: 0px;
+	font: inherit;
+	font-size: 12px;
+	line-height: 20px;
+}
+#body-bottom-title-exit-button:hover{
+	color: #000000;
+	text-decoration: underline;	
+}

@@ -1,0 +1,30 @@
+.simple-tooltip {
+	position: absolute;
+}
+.tooltip-bg1 {
+	background-image: url("transparent.png");
+	border-radius: 3px;
+	padding: 3px 5px;
+	color:#FFFFFF;
+	font-family: Arial;
+	font-size:14px;
+	z-index:200;
+	width:300px;
+	position: absolute;
+	-webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
+	-moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
+	box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
+}
+.tooltip-bg2 {
+	background-image: url("transparent.png");
+	border-radius: 3px;
+	padding: 3px 5px;
+	color:#FFFFFF;
+	font-family: Arial;
+	font-size:14px;
+	z-index:200;
+	width:300px;
+	-webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
+	-moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
+	box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
+}

@@ -1,0 +1,222 @@
+@font-face {
+	font-family: 'Andika';
+	src: url( '/static/fonts/Andika/Andika-R.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Anonymous Pro';
+	src: url( '/static/fonts/Anonymous_Pro/AnonymousPro-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Bad Script';
+	src: url( '/static/fonts/Bad_Script/BadScript-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Comfortaa';
+	src: url( '/static/fonts/Comfortaa/Comfortaa-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Cuprum';
+	src: url( '/static/fonts/Cuprum/Cuprum-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Didact Gothic';
+	src: url( '/static/fonts/Didact_Gothic/DidactGothic-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'EB Garamond';
+	src: url( '/static/fonts/EB_Garamond/EBGaramond-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Forum';
+	src: url( '/static/fonts/Forum/Forum-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Istok Web';
+	src: url( '/static/fonts/Istok_Web/IstokWeb-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Jura';
+	src: url( '/static/fonts/Jura/Jura-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Kelly Slab';
+	src: url( '/static/fonts/Kelly_Slab/KellySlab-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Ledger';
+	src: url( '/static/fonts/Ledger/Ledger-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Lobster';
+	src: url( '/static/fonts/Lobster/Lobster-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Marck Script';
+	src: url( '/static/fonts/Marck_Script/MarckScript-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Marmelad';
+	src: url( '/static/fonts/Marmelad/Marmelad-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Neucha';
+	src: url( '/static/fonts/Neucha/Neucha-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Open Sans';
+	src: url( '/static/fonts/Open_Sans/OpenSans-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+  font-family: 'Open Sans Condensed';
+  font-style: italic;
+  font-weight: 300;
+  src: local('Open Sans Cond Light Italic'), local('OpenSans-CondensedLightItalic'), url(/static/fonts/Open_Sans_Condensed/OpenSans-CondensedLightItalic.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans Condensed';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Condensed Bold'), local('OpenSans-CondensedBold'), url(/static/fonts/Open_Sans_Condensed/OpenSans-CondensedBold.woff) format('woff');
+}
+@font-face {
+  font-family: 'Open Sans Condensed';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Cond Light'), local('OpenSans-CondensedLight'), url(/static/fonts/Open_Sans_Condensed/OpenSans-CondensedLight.woff) format('woff');
+}
+@font-face {
+	font-family: 'PT Mono';
+	src: url( '/static/fonts/PT_Mono/PTM55FT-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'PT Sans';
+	src: url( '/static/fonts/PT_Sans/PT_Sans-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'PT Sans';
+	src: url( '/static/fonts/PT_Sans/PT_Sans-Web-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'PT Sans Caption';
+	src: url( '/static/fonts/PT_Sans_Caption/PT_Sans-Caption-Web-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'PT Sans Narrow';
+	src: url( '/static/fonts/PT_Sans_Narrow/PT_Sans-Narrow-Web-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'PT Serif';
+	src: url( '/static/fonts/PT_Serif/PT_Serif-Web-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'PT Serif Caption';
+	src: url( '/static/fonts/PT_Serif_Caption/PT_Serif-Caption-Web-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Philosopher';
+	src: url( '/static/fonts/Philosopher/Philosopher-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Play';
+	src: url( '/static/fonts/Play/Play-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Poiret One';
+	src: url( '/static/fonts/Poiret_One/PoiretOne-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Press Start 2P';
+	src: url( '/static/fonts/Press_Start_2P/PressStart2P-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Prosto One';
+	src: url( '/static/fonts/Prosto_One/ProstoOne-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Russo One';
+	src: url( '/static/fonts/Russo_One/RussoOne-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Tenor Sans';
+	src: url( '/static/fonts/Tenor_Sans/TenorSans-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Ubuntu';
+	src: url( '/static/fonts/Ubuntu/Ubuntu-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Ubuntu Condensed';
+	src: url( '/static/fonts/Ubuntu_Condensed/UbuntuCondensed-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Ubuntu Mono';
+	src: url( '/static/fonts/Ubuntu_Mono/UbuntuMono-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}

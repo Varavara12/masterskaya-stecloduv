@@ -1,0 +1,28 @@
+;(function($) {
+$.fn.extend({
+	ph: function(options) {
+		var o = {
+			cl: 'ph'
+		};
+		if(typeof options == 'object') {
+			if(typeof options.cl == 'string') o.cl = options.cl;
+		};
+		$(this).each(function(){
+			$(this)
+			.data('ph', $(this).attr('ph'))
+			.focus(function() {
+				if ($(this).val() == $(this).data('ph')) {
+					$(this).removeClass(o.cl).val('');
+				};
+			})
+			.blur(function() {
+				if ($(this).val().replace(/(^\s+)|(\s+$)/g, "") == "") {
+					$(this).addClass(o.cl).val($(this).data("ph"));
+				};
+			})
+			.blur();
+		});
+		return this;
+	}
+});
+})(jQuery);

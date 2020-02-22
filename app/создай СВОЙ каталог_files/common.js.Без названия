@@ -1,0 +1,267 @@
+var site = {};
+/* Popup msgs */
+(function(s){
+	var msgs = [];
+	
+	$(document).on({
+		click: function(){
+			$(this).stopTime('site-popupmsg').remove();
+		}
+	}, '.site-popupmsg');
+	
+	s.popupmsg = function(o){
+		var o = {
+			text: o.text == undefined ? '' : o.text,
+			timeOut: o.timeOut == undefined ? 2000 : o.timeOut,
+			fadeTimeOut: o.fadeTimeOut == undefined ? 1000 : o.fadeTimeOut
+		};
+		var e = $('<div class = "site-popupmsg"><div class = "site-popupmsg-wp">'+o.text+'</div></div>')
+		.css({top: '70px'})
+		.appendTo('body')
+		.oneTime(o.timeOut, 'site-popupmsg', function (){
+			e.fadeOut(o.fadeTimeOut, function() {
+				$(this).remove();
+			});
+		});
+		
+		return s;
+	}
+})(site);
+/* Windows */
+(function(s){
+	var opened = [];
+	s.window = {
+		showById: function(id){
+		
+		},
+		hideById:function(id){
+		
+		},
+		hideLast: function(){
+		
+		}
+	};
+	return s.window;
+;
+})(site);
+
+
+
+
+
+/* Msgs */
+(function(s){
+	s.msg = function(text){
+		
+		return s;
+	};
+})(site);
+
+$(document).ready(function(){
+	s = {
+		window: {
+			parent: undefined,
+			opened: [],
+			getOpened: function(target){
+				for(var i=0; i<this.opened.length; i++ )
+				if(this.opened[i] != undefined && this.opened[i].target == target) return this.opened[i];
+				return false
+			},
+			open: function(target, onOpen){
+				var opened = this.getOpened(target);
+				var onOpen = typeof onOpen == 'function' ? onOpen : function(){};
+				
+				if(!opened) {
+					onOpen();
+					var parent = $('.window-current');
+					var scrollTop = parent.scrollTop();
+					parent.data('css', {scrollTop: scrollTop});
+					if(parent[0] != undefined && parent[0].nodeName == 'BODY') parent.css({overflow: 'hidden'});
+					$('#'+target).show().scrollTop(0);
+					$('#'+target).data('parent', $('.window-current').removeClass('window-current').eq(0)).addClass('window-current');
+					this.opened.push({target:target,index:this.opened.length});
+				};
+			},
+			close: function(target) {
+				var opened = this.getOpened(target);
+				if(opened) {
+					var parent = $('#'+target).data('parent', parent);
+					var scrollTop = parent.data('css').scrollTop;
+					$('#'+target).hide();
+					
+					parent.css({top: ''}).scrollTop(scrollTop);
+					if(parent[0].nodeName == 'BODY') parent.css({overflow: ''});
+					$('#'+target).removeClass('window-current').data('parent').addClass('window-current');
+					delete this.opened[opened.index];
+				};
+			},
+			msg: {
+				show: function(title, text, action){
+					$('#msg').data('d', {
+						action: action
+					});
+					if(typeof title == 'string') $('#msg').find('.window-title').html(title);
+					if(typeof text == 'string') $('#msg').find('.window-text').html(text);
+					s.window.open('msg');
+				},
+				hide: function(){
+					var d = $('#msg').data('d');
+					if(d.action != undefined) {
+						$('#wait').show();
+						window.location.href = d.action;
+					}
+					else {
+						s.window.close('msg');
+						$('#msg').find('.window-title').html('');
+						$('#msg').find('.window-text').html('');
+					}
+				}
+			}
+		},
+		ajax: function(options){
+			options = (typeof options == 'object') ? options : {};
+			options.success = (typeof options.success == 'object') ? options.success : {};
+			var o = {
+				type: (typeof options.type == 'string') ? options.type : 'POST',
+				url: (typeof options.url == 'string') ? options.url : '',
+				data: (typeof options.data == 'string') ? options.data : '',
+				silent: (typeof options.silent == 'boolean') ? options.silent : false,
+				beforeSend: (typeof options.beforeSend == 'function') ? options.beforeSend : function(){},
+				success: {
+					ok: (typeof options.success.ok == 'function') ? options.success.ok : function(){},
+					err: (typeof options.success.err == 'function') ? options.success.err : function(){},
+					onJSON: (typeof options.success.onJSON == 'function') ? options.success.onJSON : function(){}
+				}
+			};
+			$.ajax({
+				type: o.type,
+				url: o.url,
+				data: o.data,
+				timeout: 300000,
+				beforeSend: function(){
+					if(!o.silent) $("#wait").show();	
+					o.beforeSend();
+				},
+				success: function(request){
+					var filtered = /^[\],:"{}\s]*$/.test(request.replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''));
+					if (filtered && request != '') {
+						var request = $.evalJSON(request);
+						if(request.type != undefined) {
+							switch (request.type) {
+								case 'cmd':
+									switch (request.data.name) {
+										case 'reload': window.location.pathname=window.location.pathname; break;
+										case 'location': s.window.msg.show(request.data.title, request.data.text, request.data.href); if(!o.silent) $("#wait").hide(); break;								
+										case 'moveto': window.location.href = request.data.href; break;
+									};
+								break;
+								case 'msg':
+									s.window.msg.show(request.data.title, request.data.text);
+									o.success.ok(request);
+									if(!o.silent) $("#wait").hide();
+								break;
+								case 'data':
+									o.success.ok(request);
+									if(!o.silent) $("#wait").hide();
+								break;
+								case 'json':
+									if(request.data.script != undefined) eval(request.data.script);
+									if(request.data.err == 20) s.window.msg.show('.::.', 'Сервер перегружен, пожалуйста повторите запрос через минуту');
+									o.success.onJSON(request.data);
+									if(!o.silent) $("#wait").hide();
+								break;
+								default:
+									s.window.msg.show('UNKNOWN REQUEST TYPE', request);
+									o.success.err(request);
+									$("#wait").hide();
+								break;
+							};
+						} else {
+							s.window.msg.show('REQUEST TYPE IS UNDEFINED', request);
+							o.success.err(request);
+							if(!o.silent) $("#wait").hide();
+						}
+					} else if(request == '') {
+						s.window.msg.show('Request string is empty', '');
+						o.success.err(request);
+						if(!o.silent) $("#wait").hide();
+					} else if (/<\/html>/.test(request)) {
+						s.window.msg.show('Error', 'Request string is html page');
+						//window.location.pathname=window.location.pathname;
+						o.success.err(request);
+						if(!o.silent) $("#wait").hide();
+					} else {
+						s.window.msg.show('Broken request string', request);
+						o.success.err(request);
+						if(!o.silent) $("#wait").hide();
+					};
+				}
+				//error: function(jqXHR, textStatus, errorThrown) {
+				//	alert('Server error');
+				//}
+			});
+		}
+	};
+	$('.window, .window-close').on('click', function(event){
+		var id = $(this).prop('id');
+		if(id == 'msg') s.window.msg.hide();
+		else {
+			s.window.close(id);
+		};
+	});
+	$('.window-close').on('click', function(event){
+		var id = $(this).parents('.window').prop('id');
+		if(id == 'msg') s.window.msg.hide();
+		else {
+			s.window.close(id);
+		};
+		event.stopPropagation();
+	});
+	$('.window-inner').on({
+		click: function(event){
+			event.stopPropagation();
+		}
+	});
+	$("#wait").click(function () {$("#wait").hide();});
+	$('#registration .close').click(function(){s.window.close('registration');});
+	
+	$('a[href=#registration]').click(function(){s.window.open('registration', function(){
+		$('#registration').find('.window-form-captcha-img').attr('src', '/?captcha&get');
+	});return false;});
+	$('a[href=#restore]').click(function(){s.window.open('restore', function(){
+		$('#restore').find('.window-form-captcha-img').attr('src', '/?captcha&get');
+	});return false;});
+	$('a[href=#auth]').click(function(){s.window.open('auth');return false;});
+	$('a[href=#feedback]').click(function(){s.window.open('feedback', function(){
+		$('#feedback').find('.window-form-captcha-img').attr('src', '/?captcha&get');
+	});return false;});
+	$('a[href=#orderforpremium]').click(function(){s.window.open('orderforpremium', function(){
+		$('#orderforpremium').find('.window-form-captcha-img').attr('src', '/?captcha&get');
+	});return false;});
+
+	$.preloadImages = function() {
+		if($('#cache').length == 0) $('BODY').append('<div id = "cache"></div>');
+		for(var i = 0; i<arguments.length; i++) {$('#cache').append('<span style = "background-image: url(\'' +  arguments[i] + '\'); width: 0px; height: 0px;"></span>');};
+	};
+	$('a').each(function(){
+		if(window.location.protocol + '//' + window.location.host + this.attributes.href.value == window.location.href) $(this).addClass('active');
+	});
+	$('.clearval').val('')
+	$('.uncheck').prop('checked', false);
+	
+	$.preloadImages(
+		'static/templates/common/img/transparent.png',
+		'static/templates/common/img/a0_common/win1-bottom.png',
+		'static/templates/common/img/a0_common/win1-close.png',
+		'static/templates/common/img/a0_common/win1-inner.png',
+		'static/templates/common/img/a0_common/win1-top.png'
+	);
+	$('a[href=#]').click(function(){
+		if(!$(this).hasClass('next') && !$(this).hasClass('prev')) {
+			s.window.msg.show('Работаем..','Увы, но раздел находится в разработке');
+			return false;
+		}
+	});
+
+	//s.window.msg.show('.::.','test');
+});

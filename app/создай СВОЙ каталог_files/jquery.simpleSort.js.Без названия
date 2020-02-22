@@ -1,0 +1,30 @@
+;(function ($) {
+jQuery.fn.extend({
+	simpleSort: function(options) {
+	if(typeof options != 'object') return this; 
+	if(typeof options.target != 'string') return this; 
+	if(typeof options.value != 'string') return this; 
+	var o = {
+		effect: (typeof options.effect == 'string') ? (options.effect) : ('toggle'),
+		target: (typeof options.target == 'string') ? (options.target) : '',
+		value: (typeof options.value == 'string') ? (options.value) : '',
+		fn: (typeof options.fn == 'function') ? (options.fn) : (function(h1, h2, value) {h1 = $(h1).find(value).text();h2 = $(h2).find(value).text();return h1 < h2 ? -1 : h1 > h2 ? 1 : 0;}),
+		afterClick: (typeof options.afterClick == 'function') ? (options.afterClick) : function(event){}
+	}
+	$(this).on({
+		click: function(event){
+			var data = $(this).data();
+			var container = $(o.target).parent();
+			var elements = $(o.target);
+			if(data.simpleSort == 'desc') {elements.sort(function(h1, h2){return o.fn(h1, h2, o.value)}); data.simpleSort = 'asc';}
+			else {elements.sort(function(h1, h2){return -1*o.fn(h1, h2, o.value)}); data.simpleSort = 'desc';};
+			
+			$(elements).each(function(){
+				$(container).append(this);
+			});
+			o.afterClick(event);
+		}
+	});
+	return this;
+}});
+}(jQuery));

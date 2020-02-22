@@ -1,0 +1,193 @@
+﻿/*************************************************************************
+* jQuery simpleTooltip
+* Author: Aleksandr Afonin (lifin@mail.ru)
+* Homepage: 
+*
+* jQuery Tooltip is Copyright (C) 2011-2021
+* Aleksandr Afonin. All Rights Reserved.
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*
+**************************************************************************/
+;(function($) {
+$.fn.extend({
+	disableSelection : function() {
+		this.each(function() {
+			this.onselectstart = function() { return false; };
+			/*this.unselectable = 'on';*/
+			$(this).css('-moz-user-select', 'none').css('-khtml-user-select', 'none').css('-webkit-user-select', 'none');
+			
+		});
+		$(document).bind('dragstart', function() {
+			return false;
+		});
+		return this;
+	},
+	enableSelection : function() {
+		this.each(function() {
+			this.onselectstart = function() {};
+			/*this.unselectable = 'off';*/
+			$(this).css('-moz-user-select', 'auto').css('-khtml-user-select', 'auto').css('-webkit-user-select', 'auto');
+		});
+		$(document).unbind('dragstart');
+		return this;
+	},
+	simpleDnd: function(options){
+		
+		var updateData = function(document, target){
+			if($(target).data().simpleDnd == undefined) $(target).data().simpleDnd = {};
+			
+			$(target).data().simpleDnd.top = $(target).offset().top + $(document).scrollTop();
+			$(target).data().simpleDnd.left = $(target).offset().left + $(document).scrollLeft();
+			$(target).data().simpleDnd.width = $(target).width();
+			$(target).data().simpleDnd.height = $(target).height();
+			if(o.debug) {
+				if($(target).data().simpleDnd.clone == undefined) 
+				$(target).data().simpleDnd.clone = $(target).clone().css({position:'absolute',backgroundColor:'#ffffff',opacity:.3,zIndex:1000000}).addClass('simpleDnd-DEBUG').appendTo($(target).parent());
+				$(target).data().simpleDnd.clone.css({left:$(target).offset().left+'px',top:$(target).offset().top+'px',height:$(target).height()});
+			};
+		};
+		var clearData = function(target){
+			delete $(target).data().simpleDnd;
+		};
+		var data = function(){return userData;};
+		var o = {
+			map: [],
+			opacity: (typeof options.opacity == 'number') ? (options.opacity) : (.5),
+			beforeStart: (typeof options.beforeStart == 'function') ? (options.beforeStart) : (function(event){return true;}),
+			afterStart: (typeof options.afterStart == 'function') ? (options.afterStart) : (function(event){}),
+			onMouseDown: (typeof options.onMouseDown == 'function') ? (options.onMouseDown) : (function(event){}),
+			onObjectDrag: (typeof options.onObjectDrag == 'function') ? (options.onObjectDrag) : (function(event){}),
+			onObjectDrop: (typeof options.onObjectDrop == 'function') ? (options.onObjectDrop) : (function(event){}),
+			beforeEnd: (typeof options.beforeEnd == 'function') ? (options.beforeEnd) : (function(event){}),
+			onTargetOver: (typeof options.onTargetOver == 'function') ? (options.onTargetOver) : (function(event){}),
+			onTargetOut: (typeof options.onTargetOut == 'function') ? (options.onTargetOut) : (function(event){}),
+			debug: (typeof options.debug == 'boolean') ? (options.debug) : (false),
+			liveMode: (typeof options.liveMode == 'boolean') ? (options.liveMode) : (false)
+		};
+		var userData = {};
+		
+		if(typeof options.map != 'object' || options.map.length == undefined || options.map.length == 0) return this;
+		for(var i=0; i<options.map.length; i++) {
+			var val = options.map[i];
+			if(typeof val.document != 'string') return this;
+			if(typeof val.target != 'string') return this;
+			o.map[i] = {document:val.document,target:val.target};
+		};
+		$(this).live({
+			mousedown: function(event){
+				event.preventDefault();	
+				var d = {object:undefined, map:[], originalObject:$(this), currentTarget: undefined, currentDocument: undefined, started: false, debug:o.debug, liveMode:o.liveMode, updateData:updateData, data:data};
+				userData = {};
+				event.simpleDnd = d;
+				for(var i=0; i<o.map.length; i++) {
+					d.map[i] = {
+						target: $(o.map[i].target),
+						document: $(o.map[i].document),
+					};
+				};
+				if(!o.beforeStart.call(this, event)) return true;
+				
+				$(document).on({
+					mousemove: function(event){
+						var lastTarget = d.currentTarget,
+							lastDocument = d.currentDocument,
+							currentTarget = undefined,
+							currentDocument = undefined,
+							x = event.pageX,
+							y = event.pageY;
+							
+						event.simpleDnd = d;
+						if(!d.started) {
+							d.object = d.originalObject.clone().css({position:'absolute',opacity: o.opacity, top: -10000}).addClass('simpleDnd').appendTo('body').off();
+							o.afterStart.call(this, event);
+							for(var i=0; i<d.map.length; i++) {
+								$(d.map[i].target).each(function(){
+									updateData(d.map[i].document, this);
+								});
+							};
+							d.started = true;
+						};
+						if(d.liveMode) {
+							for(var i=0; i<d.map.length; i++) {
+								$(d.map[i].target).each(function(){
+									d.updateData(d.map[i].document, this);
+								});
+							};
+						};
+						for(var i=0; i<d.map.length && currentTarget == undefined; i++) {
+							var scrollTop = $(d.map[i].document).scrollTop();
+							var scrollLeft = $(d.map[i].document).scrollLeft();
+							d.map[i].target.each(function(){
+								var data = $(this).data().simpleDnd;
+								var left = data.left - scrollLeft;
+								var top = data.top - scrollTop;
+								if((x > left) && (x < left + data.width) && (y > top) && (y < top + data.height)){
+									//console.log($(this).attr('class'));
+									currentTarget = this;
+									currentDocument = d.map[i].document;
+									return false;
+								} else return true;
+							});
+						};
+						if(currentTarget != lastTarget && lastTarget != undefined){
+							//console.log('mouseout');
+							o.onTargetOut.call(lastTarget, event);
+						};
+						d.currentTarget = currentTarget;
+						d.currentDocument = currentDocument;
+						if(currentTarget != lastTarget && currentTarget != undefined){
+							//console.log('mouseover');
+							o.onTargetOver.call(currentTarget, event);
+						};
+						d.object.css({
+							top: y+1,
+							left: x+1
+						});
+						o.onObjectDrag.call(currentTarget, event);
+					},
+					mouseup: function(event){
+						event.simpleDnd = d;
+						$(document).off('mousemove mouseup');
+						o.beforeEnd.call(this, event);
+						if(d.started) {
+							for(var i=0; i<d.map.length; i++) {$(d.map[i].target).each(function(){clearData(this);});};
+							d.object = undefined;
+							o.onObjectDrop.call(this, event);
+						};
+						
+						$('body').enableSelection();
+						$('.simpleDnd').remove();
+						if(o.debug) $('.simpleDnd-DEBUG').remove();
+					}
+				});
+				$('body').disableSelection();
+				o.onMouseDown.call(this, event);
+			}
+		});
+		return this;
+	}
+});
+})(jQuery);
+
+/*
+onStartDrag()
+onStopDrag()
+onDrag()
+
+onStartHover()
+onHover()
+onStopHover()
+onDrop()
+*/

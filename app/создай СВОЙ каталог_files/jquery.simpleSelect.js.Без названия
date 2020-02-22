@@ -1,0 +1,117 @@
+﻿/*************************************************************************
+* jQuery simpleTooltip
+* Author: Aleksandr Afonin (lifin@mail.ru)
+* Homepage: 
+*
+* jQuery Tooltip is Copyright (C) 2011-2021
+* Aleksandr Afonin. All Rights Reserved.
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*
+**************************************************************************/
+;(function($) {
+$.fn.extend({
+	simpleSelect: function(options){
+		var o = {};
+		var select = $('<div class = "simpleSelect"></div>');
+		var current = $('<div class = "simpleSelect-current"></div>').appendTo(select);
+		var list = $('<div class = "simpleSelect-list"></div>').appendTo(select).hide();
+		var selected = $(this).find('option').eq(0).html();
+		$(this).find('option').each(function(){
+			var $this = $(this);
+			var option = $('<div class = "simpleSelect-list-option">'+$this.html()+'</div>').val($this.val());
+			if($this.prop('selected')) {
+				option.addClass('simpleSelect-list-option-selected');
+				selected = $this.html();
+			};
+			$this.data('simpleSelect', {option:option});
+			list.append(option);
+		});
+		list.find('.simpleSelect-list-option').eq(0).addClass('simpleSelect-list-option-first');
+		current.html(selected);
+		$(this).hide();
+		select.appendTo($(this).parent());
+		var fn = {
+			open: function(){
+				prop.list.show();
+				prop.opened = true;
+			},
+			close: function(){
+				prop.list.hide();
+				prop.opened = false;
+			},
+			set: function(e){
+				var val = $(e).val();
+				var html = $(e).html();
+				$('.simpleSelect-list-option.simpleSelect-list-option-checked').removeClass('simpleSelect-list-option-checked');
+				$(e).addClass('simpleSelect-list-option-checked');
+				current.html(html);
+				select.val(val);
+				prop.original.val(val);
+			},
+			reinit: function(){
+				var select = $(this.select);
+				var option = select.find(':selected').data().simpleSelect.option;
+				
+				fn.set(option);
+			},
+			setByVal: function(val){
+				var select = $(this.select);
+				var option = select.find('[value="'+val+'"]');
+				
+				if(option.length > 0) {
+					option = option.data().simpleSelect.option;
+					fn.set(option);
+					return true;
+				} else return false;
+			},
+			onDocumentClick: function(){
+				$(document).off('click', fn.onDocumentClick);
+				fn.close();
+			}
+		};
+		var prop = {
+			opened: false,
+			select: select,
+			list: list,
+			original: this,
+			current: current
+		};
+		$(select).on({
+			click: function(event){
+				event.stopPropagation();
+				if(prop.opened) fn.close();
+				else {
+					$(document).on('click', fn.onDocumentClick);
+					fn.open();
+				};
+			}
+		}).data().simpleSelect = {select:select};
+		list.find('.simpleSelect-list-option').on({
+			click: function(){
+				fn.set(this);
+				prop.original.change();
+			}
+		});
+		
+		$(this).data().simpleSelect = {
+			reinit:fn.reinit,
+			select:this,
+			set: fn.setByVal
+		};
+		
+		return this;
+	}
+});
+})(jQuery);

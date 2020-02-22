@@ -1,0 +1,114 @@
+$(document).ready(function(){
+	var htt = $("INPUT.error").simpleTooltipInit({
+		name: "tt",
+		offsetx: 10,
+		offsety: -15,
+		position: 'center-right'
+	});
+	var tt = function() {if($(this).hasClass('error') && $(this).val() != '') {$(this).simpleTooltipShow(htt);} else {$(this).simpleTooltipHide(htt);}};
+	$('INPUT').live('focus', tt).live('blur', function(){$(this).simpleTooltipHide(htt);});
+	var checkForm = function() {
+		$('FORM.validate').each(function(){
+			var button = $(this).find("BUTTON");
+			button.removeAttr("disabled");
+			$(this).find(".text, .password, .email").each(function(){if($(this).hasClass("error") || $(this).val() == '' && !$(this).hasClass("noprimary")) button.attr("disabled","disabled");});
+		});
+	};
+	
+	
+	$("INPUT.text").validator({
+		minLength: 2,
+		maxLength: 32,
+		format: "alphanumeric",
+		invalidEmpty: false,
+		correct: function() {$(this).removeClass('error');},
+		error: function() {$(this).addClass('error');}
+	});
+
+	$("INPUT.password").validator({
+		minLength: 6,
+		maxLength: 32,
+		format: "alphanumeric",
+		invalidEmpty: false,
+		correct: function() {$(this).removeClass('error');},
+		error: function() {$(this).addClass('error');}
+	});
+	
+	$("INPUT.email").validator({
+		minLength: 8,
+		maxLength: 32,
+		format: "email",
+		invalidEmpty: false,
+		correct: function() {$(this).removeClass('error');},
+		error: function() {$(this).addClass('error');}
+	});
+	
+	
+	$("INPUT.equal1").validator({
+		invalidEmpty: false,
+		equals: function(field) {
+			if($(field).next().next().length != 0) return $(field).next().next().val();
+			else return $(field).next().next().val();
+		},
+		correct: function() {$(this).removeClass('error');},
+		error: function() {$(this).addClass('error');}
+	});
+	
+	$("INPUT.equal2").validator({
+		invalidEmpty: false,
+		equals: function(field) {
+			if($(field).prev().prev().length != 0) return $(field).prev().prev().val();
+			else return $(field).prev().prev().val();
+		},
+		correct: function() {$(this).removeClass('error');},
+		error: function() {$(this).addClass('error');}
+	});
+	
+	$('INPUT').live('keydown', function(){
+		$(this).stopTime('validate');
+		$(this).oneTime('1ms', 'validate', function() {$(this).validator('validate'); tt.call(this); checkForm();});
+	});
+	$('INPUT').live('blur', function(){
+		$(this).validator('validate');
+		checkForm();
+	});
+	updateCaptcha = function(e){
+		var date = new Date();
+		var src = '/?captcha&get&data[v]='+date.getTime();
+		$(e).attr('src', src);
+	}
+	
+	$("FORM.ajax").submit(function () {
+		if(this.action != "") {
+			var form = this;
+			
+			s.ajax({
+				url: form.action,
+				data: $(form).serialize(),
+				beforeSend: function(){
+					$(form).find('BUTTON').attr("disabled","disabled");
+					$(form).not('BUTTON.disabled').oneTime("10s", "disabler", function() {$(this).removeAttr("disabled");});
+				},
+				success: {
+					onJSON: function(request){
+						if($(form).data().onJSON != undefined) $(form).data().onJSON(request);
+						if(request.err == 0) {
+							if(request.msg != undefined) s.window.msg.show('.::.', request.msg);
+						} else if(request.err == 1){
+							if(request.msg != undefined) s.window.msg.show('.::.', request.msg);
+							else s.window.msg.show('.::.', 'Внутреняя ошибка');
+						} else if(request.err == 2){
+							if(request.msg != undefined) s.window.msg.show('.::.', request.msg);
+							else s.window.msg.show('.::.', 'Форма заполнена не верно');
+							
+							updateCaptcha($(form).find('.window-form-captcha-img'));
+						};
+					}
+				}
+			});
+			return false;
+		} else return true;
+	});
+	
+	$('INPUT').blur();
+});

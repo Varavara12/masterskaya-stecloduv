@@ -1,0 +1,118 @@
+/*************************************************************************
+* jQuery simpleTooltip
+* Author: Aleksandr Afonin (lifin@mail.ru)
+* Homepage: 
+*
+* jQuery Tooltip is Copyright (C) 2011-2021
+* Aleksandr Afonin. All Rights Reserved.
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*
+**************************************************************************/
+;(function($) {
+$.fn.extend({
+	simpleTooltipInit: function(o) {
+		var options = {
+			name: 'tt_template',
+			offsetx: 0,	
+			offsety: 0,
+			position: 'top-center',
+			ttInner: 'tooltip-bg1',
+			effect: 'toggle',
+			fadespeed: 300,
+			layout: '<div class = "tooltip-bg1"></div>',
+			id: null,
+			title: 'tt',
+			setInner: true
+		};
+
+		if (typeof(o) == 'object') {
+			if(typeof(o.name) == 'string') options.name = o.name;
+			if(typeof(o.offsetx) == 'number' || typeof(o.offsetx) == 'function') options.offsetx = o.offsetx;
+			if(typeof(o.offsety) == 'number' || typeof(o.offsety) == 'function') options.offsety = o.offsety;
+			if(typeof(o.position) == 'string') options.position = o.position;
+			if(typeof(o.effect) == 'string') options.effect = o.effect;
+			if(typeof(o.ttInner) == 'string') options.ttInner = o.ttInner;
+			if(typeof(o.layout) == 'string') options.layout = o.layout;
+			if(typeof(o.fadespeed) == 'number') options.fadespeed = o.fadespeed;
+			if(typeof(o.title) == 'string') options.title = o.title;
+			if(typeof(o.setInner) == 'boolean') options.setInner = o.setInner;
+			options.id = '#' + options.name;
+		};
+
+		if($(options.id).length == 0) {
+			$('BODY').append('<div id = ' + options.name + ' class = "simple-tooltip"></div>');
+			$(options.id).append(options.layout);
+			$(options.id).css('position', 'absolute').css('display', 'none');
+		};
+		
+		var handle = {
+			id: options.id,
+			ttInner: options.ttInner,
+			effect: options.effect,
+			offsetx: options.offsetx,	
+			offsety: options.offsety,
+			position: options.position,
+			fadespeed: options.fadespeed,
+			title: options.title,
+			setInner: options.setInner
+		};
+		return handle;
+	},
+	simpleTooltipShow: function(handle) {
+		if (typeof(handle) == 'object') {
+			var cssToInt = function(element, css) {return parseFloat($(element).css(css).replace('px', '').replace('auto', '0'));};
+			if(handle.setInner) $(handle.id + ' .' + handle.ttInner).text($(this).attr(handle.title));
+			
+			var tHeight = cssToInt(handle.id, 'height') + cssToInt(handle.id, 'margin-top') + cssToInt(handle.id, 'margin-bottom') + cssToInt(handle.id, 'padding-top') + cssToInt(handle.id, 'padding-bottom');
+			var tWidth = cssToInt(handle.id, 'width') + cssToInt(handle.id, 'margin-left') + cssToInt(handle.id, 'margin-right') + cssToInt(handle.id, 'padding-left') + cssToInt(handle.id, 'padding-right');
+			var eWidth = cssToInt(this, 'width') + cssToInt(this, 'padding-left') + cssToInt(this, 'padding-right');
+			var eHeight = cssToInt(this, 'height') + cssToInt(this, 'padding-top') + cssToInt(this, 'padding-bottom');
+			var startLeft = $(this).offset().left; 
+			var startTop = $(this).offset().top; 
+			
+			if(typeof(handle.offsetx) == 'function') handle.offsetx = handle.offsetx(this);
+			if(typeof(handle.offsety) == 'function') handle.offsety = handle.offsety(this);
+			
+			
+			switch (handle.position)  {
+				case 'top-left': var left = startLeft - tWidth + handle.offsetx; var top = startTop - tHeight + handle.offsety; break;
+				case 'top-center': var left = startLeft + eWidth / 2 - tWidth / 2 + handle.offsetx; var top = startTop - tHeight + handle.offsety; break;
+				case 'top-right': var left = startLeft + eWidth + handle.offsetx; var top = startTop - tHeight + handle.offsety; break;
+				case 'center-right': var left = startLeft + eWidth + handle.offsetx; var top = startTop + eHeight / 2 - tHeight / 2 + handle.offsety; break;
+				case 'bottom-right': var left = startLeft + eWidth + handle.offsetx; var top = startTop + eHeight + handle.offsety; break;
+				case 'bottom-center': var left = startLeft + eWidth / 2 - tWidth / 2 + handle.offsetx; var top = startTop + eHeight + handle.offsety; break;
+				case 'bottom-left': var left = startLeft - tWidth + handle.offsetx; var top = startTop + eHeight + handle.offsety; break;
+				case 'left-center': var left = startLeft - tWidth + handle.offsetx; var top = startTop + eHeight / 2 - tHeight / 2 + handle.offsety; break;
+				default: return this;
+			};
+			
+			$(handle.id).css('left', left).css('top', top);if(handle.effect == 'toggle') {$(handle.id).show();} else if(handle.effect == 'fade') {$(handle.id).fadeIn(handle.fadespeed);} else return $(this);
+			return this;
+		} else return this;
+	},
+	simpleTooltipHide: function(handle) {
+		if (typeof(handle) == 'object') {
+			$(handle.id).hide();
+			return this;
+		} else return this;
+	},
+	simpleTooltipToggle: function(handle) {
+		if (typeof(handle) == 'object') {
+			if($(handle.id).css('display') == 'none') $(this).simpleTooltipShow(handle);
+			else $(this).simpleTooltipHide(handle);
+		} else return this;
+	}
+});
+})(jQuery);
