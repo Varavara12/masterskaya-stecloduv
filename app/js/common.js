@@ -66,7 +66,7 @@ $(function() {
         }
     });
 
-    
+
 
    function carouselService() {
        $('.carousel-services-item').each(function () {
@@ -177,13 +177,7 @@ $(function () {
         $('body').scrollTop(0);
 });
 
-$(function(){
-    $('img').on('click',function(){
-        $('img , .layout').fadeOut();
-        var atr = $('iframe').attr("src");
-        $('iframe').attr("src", atr + '?rel=0&autoplay=1');
-    });
-});
+
 
 $(window).on('load', function () {
     $('#preloader').delay(2000).fadeOut('slow');

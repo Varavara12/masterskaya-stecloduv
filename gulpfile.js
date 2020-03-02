@@ -12,24 +12,27 @@ var gulp         = require('gulp'),
 		del          = require('del');
 
 // Local Server
-gulp.task('browser-sync', function() {
+gulp.task('browser-sync', function(done) {
 	browserSync.init({
 		server: {
 			baseDir: 'app'
 		},
 		notify: false,
+		
 		// online: false, // Work offline without internet connection
 		// tunnel: true, tunnel: 'projectname', // Demonstration page: http://projectname.localtunnel.me
-	})
+	});
+    done()
 });
 function bsReload(done) { browserSync.reload(); done() }
 
 // Custom Styles
-gulp.task('styles', function() {
+gulp.task('styles',  function() {
 	return gulp.src('app/sass/**/*.sass')
 	.pipe(sass({
 		outputStyle: 'expanded',
 		includePaths: [__dirname + '/node_modules']
+
 	}))
 	.pipe(concat('main.min.css'))
 	.pipe(autoprefixer({
@@ -38,8 +41,10 @@ gulp.task('styles', function() {
 	}))
 	.pipe(cleancss( {level: { 1: { specialComments: 0 } } })) // Optional. Comment out when debugging
 	.pipe(gulp.dest('app/css'))
-	.pipe(browserSync.stream())
-});
+	.pipe(browserSync.stream());
+ done()
+
+},);
 
 // Scripts & JS Libraries
 gulp.task('scripts', function() {
@@ -113,11 +118,12 @@ gulp.task('rsync', function() {
 	}))
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', function(done) {
 	gulp.watch('app/sass/**/*.sass', gulp.parallel('styles'));
 	gulp.watch(['app/js/_custom.js', 'app/js/_libs.js'], gulp.parallel('scripts'));
 	gulp.watch('app/*.html', gulp.parallel('code'));
 	gulp.watch('app/img/_src/**/*', gulp.parallel('img'));
+	done()
 });
 
 gulp.task('default', gulp.parallel('img', 'styles', 'scripts', 'browser-sync', 'watch'));

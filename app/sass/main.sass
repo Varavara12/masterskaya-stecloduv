@@ -27,6 +27,16 @@
 	color: #666
 	opacity: 1
 
+::-webkit-scrollbar
+	width: 15px
+::-webkit-scrollbar-track
+	background: #000
+::-webkit-scrollbar-thumb
+	background: $topcolor
+	border-radius: 8px
+	border: 3px solid #000
+
+
 
 html, body
 	height: 100%
@@ -66,15 +76,18 @@ body
 
 	font-size: 150px
 	display: inline-block
-	background-image: url(https://i.gifer.com/9FVp.gif)
+	background-image: url("../img/9FVp.gif")
 	background-size: cover
 	color: transparent
 	padding: 40px
 	-webkit-background-clip: text
 
+#my-master::before
+	margin-top: 0
+
 .my2::before
 	font-size: 195px
-	background-image: url(https://i.gifer.com/9FVp.gif)
+	background-image: url("../img/9FVp.gif")
 	background-size: cover
 	color: transparent
 	-webkit-background-clip: text
@@ -147,7 +160,7 @@ section
 
   	&:after
     	content: ''
-    	background-color: #000
+    	background-color: #f04820
     	width: 0
     	height: 2px
     	position: absolute
@@ -323,7 +336,7 @@ section
 		margin-bottom: -45px
 		span
 			margin: 0 -30px
-			background-image: url(https://i.gifer.com/fxy1.gif)
+			background-image: url("../img/fxy1.gif")
 			background-size: cover
 			color: transparent
 			-webkit-background-clip: text
@@ -342,7 +355,7 @@ section
 		margin: 0
 		line-height: 1.5
 		border-bottom: 1px solid #f55011a6
-		background-image: url(https://i.gifer.com/fxy1.gif)
+		background-image: url("../img/fxy1.gif")
 		background-size: 450px
 		color: transparent
 		-webkit-background-clip: text
@@ -359,6 +372,11 @@ section
 	border-left: rgba($topcolor, .35)1px solid
 	top: 0
 	padding: 0 12px
+
+.header-menu
+	position: absolute
+	right: 11px
+	display: none
 
 .soc
 	margin: auto
@@ -792,6 +810,7 @@ select
 	letter-spacing: 3px
 	background-color: rgba(246, 5, 5, 0.14)
 	line-height: 52px
+	top: 22px
 	&::after
 		transition: background-color .2s ease
 		position: absolute
@@ -816,6 +835,9 @@ select
 	min-width: 100%
 	top: 65px
 
+.container-karta-master
+	height: 372px
+
 .side
 	padding: 20px 0
 
@@ -832,6 +854,19 @@ select
 .content-karta
 	margin-top: -90px
 	height: 100%
+
+.content-karta-master
+	.btnflip-item
+		top: -20px
+
+.karta-list
+	padding: 0
+	li
+		list-style-type: none
+		margin-left: 16px
+		.fa-spin
+			position: absolute
+			left: -16px
 
 .front
 	background-image: url("../img/logo-karta.jpg")
@@ -901,6 +936,17 @@ select
 	padding: 15px 0
 
 
+.container-karta-stock
+	.btnflip-item
+		top: -34px
+
+.container-karta-info
+    top: 12px
+    min-height: 500px
+    .btnflip-item
+      top: 0
+
+
 .logo-footer
 	width: 125px
 	margin: auto
@@ -933,7 +979,6 @@ select
 .footer-menu
 	ul
 		padding: 0
-		margin: 0
 		list-style: none
 		li.active
 			a
@@ -1018,6 +1063,8 @@ select
 		position: relative
 		top: 25px
 
+
+	
 #container-video
   overflow: hidden
   height: 104%
@@ -1038,7 +1085,9 @@ video
   .welcome
     .h1
       text-align: center
-      
+
+.welcome_info
+  margin-bottom: 60px
 
 .portfolio
   display: flex
@@ -1050,7 +1099,7 @@ video
 
   .portfolio__col
     flex-basis: 33.33333%
-    padding:  30px
+    padding:  15px
     .shadow
       position: relative
       &:before
@@ -1072,11 +1121,13 @@ video
 
 
 
-.img
+.img_gal
 	max-width: 100%
+	width: 100%
 	height: auto
 	display: block
 	border-radius: 10px
+	
 @keyframes animate3
   0%
     background-position: 0 0
@@ -1084,5 +1135,10 @@ video
     background-position: 400% 0
   100%
     background-position: 0 0
+
+
+#my-menu-katalog
+	ul
+		font-size: 45px
 
 @import "media.sass" // Всегда в конце
